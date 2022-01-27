@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>insta485</title>
+    <link rel="stylesheet" href="/static/css/user.css">
+</head>
+<body>
+<div class="column-container" style="max-width: 610px; margin: auto;">
+    <!-- Header Section  -->
+    <div class="row-container" style="width: 610px">
+        <a href="/" class="child">Insta485</a>
+        <div class="child" style="text-align: end">
+            <a href="/explore/">explore</a> |
+            <a href="/users/{{ logname }}/">{{ logname }}</a>
+        </div>
+    </div>
+    <hr>
+    <!-- Body Section -->
+    <div class="user-profile">
+        <p class="username">{{ username }}</p>
+        {% if username != logname %}
+            {% if logname_follows_username %}
+                <p>following</p>
+            {% else %}
+                <p>not following</p>
+            {% endif %}
+        {% endif %}
+        <div class="row-container">
+            {{ total_posts }} posts
+            <a href="/users/{{ username }}/followers/" style="margin-left: 6px">{{ followers }} followers</a>
+            <a href="/users/{{ username }}/following/" style="margin-left: 6px">{{ following }} following</a>
+        </div>
+        <p>{{ fullname }}</p>
+        <div class="row-container">
+            {% for post in posts %}
+                <a href="/posts/{{ post.postid }}/"><img src="{{ post.img_url }}" alt=""></a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+</body>
+</html>
