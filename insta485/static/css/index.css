@@ -49,3 +49,10 @@ hr {
     border: 1px solid grey;
     border-radius: 5px;
 }
+
+.form {
+    width: 50%;
+    margin-left: 5px;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
