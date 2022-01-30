@@ -13,11 +13,8 @@ from insta485.views.utility import get_following_list, get_profile_pic
 @insta485.app.route('/')
 def show_index():
     """Display / route."""
-
-    # Connect to database
     connection = insta485.model.get_db()
 
-    # Query database
     logname = 'awdeorio'
     if 'username' in flask.session:
         logname = flask.session['logname']
@@ -50,6 +47,5 @@ def show_index():
         timestamp = arrow.get(post['created'])
         post['created'] = arrow.now().humanize(timestamp)
 
-    # Add database info to context
     context = {"logname": logname, "posts": posts}
     return flask.render_template("index.html", **context)

@@ -15,5 +15,5 @@ from insta485.views.user import show_followers
 # from insta485.views.auth import edit
 # from insta485.views.auth import password
 # from insta485.views.auth import edit_account
-# from insta485.views.explore import show_explore
+from insta485.views.explore import show_explore
 from insta485.views.utility import download_file
