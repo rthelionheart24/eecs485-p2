@@ -12,18 +12,17 @@ from insta485.views.utility import get_following_list, get_profile_pic
 @insta485.app.route('/explore/')
 def show_explore():
     """Display / route."""
-    connection = insta485.model.get_db()
-
-    logname = 'awdeorio'
     if 'username' in flask.session:
         logname = flask.session['logname']
-    following_list = get_following_list(logname)
+    else:
+        flask.redirect(flask.url_for('/accounts/login'))
 
     connection = insta485.model.get_db()
     cur = connection.execute(
         "SELECT username FROM users"
     )
     users = [d['username'] for d in cur.fetchall()]
+    following_list = get_following_list(logname)
     not_following = []
     for user in users:
         if user not in following_list and user != logname:

@@ -15,9 +15,10 @@ def show_user(user_url_slug):
     if not user_exists_in_database(user_url_slug):
         flask.abort(404)
 
-    logname = 'awdeorio'
     if 'username' in flask.session:
         logname = flask.session['logname']
+    else:
+        flask.redirect(flask.url_for('/accounts/login'))
 
     connection = insta485.model.get_db()
     cur = connection.execute(
@@ -50,9 +51,10 @@ def show_followers(user_url_slug):
     if not user_exists_in_database(user_url_slug):
         flask.abort(404)
 
-    logname = 'michjc'
     if 'username' in flask.session:
         logname = flask.session['logname']
+    else:
+        flask.redirect(flask.url_for('/accounts/login'))
 
     followers_list = get_followers_list(user_url_slug)
     followers = []
@@ -71,9 +73,11 @@ def show_following(user_url_slug):
     if not user_exists_in_database(user_url_slug):
         flask.abort(404)
 
-    logname = 'michjc'
     if 'username' in flask.session:
         logname = flask.session['logname']
+    else:
+        flask.redirect(flask.url_for('/accounts/login'))
+
     following_list = get_following_list(user_url_slug)
     following = []
     for follow in following_list:
