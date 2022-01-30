@@ -7,6 +7,7 @@ URLs include:
 import arrow
 import flask
 import insta485
+from insta485.views.utility import get_following_list, get_profile_pic
 
 
 @insta485.app.route('/')
@@ -21,12 +22,7 @@ def show_index():
     if 'username' in flask.session:
         logname = flask.session['logname']
 
-    cur = connection.execute(
-        "SELECT * FROM following "
-        "WHERE username1 == ?",
-        (logname,)
-    )
-    following_list = [d['username2'] for d in cur.fetchall()]
+    following_list = get_following_list(logname)
     following_list.append(logname)
 
     cur = connection.execute(
@@ -42,12 +38,7 @@ def show_index():
             (post['postid'], )
         )
         post['comments'] = cur.fetchall()
-        cur = connection.execute(
-            "SELECT filename FROM users "
-            "WHERE username == ?",
-            (post['owner'],)
-        )
-        post['owner_img_url'] = cur.fetchall()[0]['filename']
+        post['owner_img_url'] = get_profile_pic(post['owner'])
         cur = connection.execute(
             "SELECT owner FROM likes "
             "WHERE postid == ?",

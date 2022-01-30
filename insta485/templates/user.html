@@ -20,20 +20,66 @@
         <p class="username">{{ username }}</p>
         {% if username != logname %}
             {% if logname_follows_username %}
-                <p>following</p>
+                <div class="row-container">
+                    <p>following</p>
+                    <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
+                    <form style="margin-top: 15px; margin-left: 5px" action="<FIXME_FOLLOWING_URL_HERE>?target=<FIXME_CURRENT_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
+                      <input type="submit" name="unfollow" value="unfollow"/>
+                      <input type="hidden" name="username" value="<FIXME_USERNAME_HERE>"/>
+                      <input type="hidden" name="operation" value="unfollow"/>
+                    </form>
+                </div>
             {% else %}
-                <p>not following</p>
+                <div class="row-container">
+                    <p style="text-align: end; color: grey; font-weight: bold; margin-top: 20px; margin-right: 4px; margin-left: 135px">not following</p>
+                    <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
+                    <form action="<FIXME_FOLLOWING_URL_HERE>?target=<FIXME_CURRENT_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
+                      <input type="submit" name="follow" value="follow"/>
+                      <input type="hidden" name="username" value="<FIXME_USERNAME_HERE>"/>
+                      <input type="hidden" name="operation" value="follow"/>
+                    </form>
+                </div>
             {% endif %}
         {% endif %}
+        {%  if username == logname %}
+            <a style="font-size: large; margin-bottom: 20px" href="/accounts/edit/">
+                Edit Profile
+            </a>
+            <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
+            <form style="margin-top: 12px; margin-bottom: 12px" action="/accounts/logout/" method="post" enctype="multipart/form-data">
+              <input type="submit" name="logout" value="Logout"/>
+            </form>
+        {%  endif %}
         <div class="row-container">
-            {{ total_posts }} posts
-            <a href="/users/{{ username }}/followers/" style="margin-left: 6px">{{ followers }} followers</a>
+            {{ total_posts }}
+            {% if total_posts == 1 %}
+                post
+            {% else %}
+                posts
+            {% endif %}
+            <a href="/users/{{ username }}/followers/" style="margin-left: 6px">{{ followers }}
+                {% if followers == 1 %}
+                    follower
+                {% else %}
+                    followers
+                {% endif %}
+            </a>
             <a href="/users/{{ username }}/following/" style="margin-left: 6px">{{ following }} following</a>
         </div>
         <p>{{ fullname }}</p>
+        {%  if username == logname %}
+            <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
+            <div style="border: solid 1px darkgrey; height: 60px; border-radius: 5px; width: 97%; margin-bottom: 20px">
+            <form style="margin-top: 20px; margin-left: 50px " action="<FIXME_POSTS_URL_HERE>?target=<FIXME_CURRENT_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
+              <input type="file" name="file" accept="image/*" required/>
+              <input type="submit" name="create_post" value="upload new post"/>
+              <input type="hidden" name="operation" value="create"/>
+            </form>
+            </div>
+        {%  endif %}
         <div class="row-container">
             {% for post in posts %}
-                <a href="/posts/{{ post.postid }}/"><img src="{{ post.img_url }}" alt=""></a>
+                <a href="/posts/{{ post.postid }}/"><img src="/uploads/{{ post.filename }}" alt=""></a>
             {% endfor %}
         </div>
     </div>

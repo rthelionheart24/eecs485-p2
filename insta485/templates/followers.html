@@ -20,14 +20,30 @@
         <h3>Followers</h3>
         {% for follower in followers %}
             <div class="follow">
-                <img src="{{ follower.user_img_url }}" alt=""
+                <img src="/uploads/{{ follower.user_img_url }}" alt=""
                      style="width: 25px; height: 30px; margin-top: 14px; margin-left: 15px; margin-right: 2px">
                 <a href="/users/{{ follower.username }}/" class="child" style="width: 37.5%;">{{ follower.username }}</a>
                 {% if follower.username != logname %}
-                    {% if follower.logname_follows_username %}
-                        <p class="child" style="text-align: end; color: grey">following</p>
+                    {% if follower.logname_follows_username == true %}
+                        <div class="row-container" style="margin-left: 150px">
+                            <p class="child" style="text-align: end; color: grey">following</p>
+                            <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
+                            <form class="child" action="<FIXME_FOLLOWING_URL_HERE>?target=<FIXME_CURRENT_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
+                              <input type="submit" name="unfollow" value="unfollow"/>
+                              <input type="hidden" name="username" value="<FIXME_USERNAME_HERE>"/>
+                              <input type="hidden" name="operation" value="unfollow"/>
+                            </form>
+                        </div>
                     {% else %}
-                        <p class="child" style="text-align: end; color: grey">not following</p>
+                        <div class="row-container" style="justify-content: end">
+                            <p style="text-align: end; color: grey; font-weight: bold; margin-top: 20px; margin-right: 4px; margin-left: 135px">not following</p>
+                            <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
+                            <form style="margin-top: 20px" action="<FIXME_FOLLOWING_URL_HERE>?target=<FIXME_CURRENT_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
+                              <input type="submit" name="follow" value="follow"/>
+                              <input type="hidden" name="username" value="<FIXME_USERNAME_HERE>"/>
+                              <input type="hidden" name="operation" value="follow"/>
+                            </form>
+                        </div>
                     {% endif %}
                 {% endif %}
             </div>
