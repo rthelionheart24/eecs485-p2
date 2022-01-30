@@ -4,7 +4,7 @@ from insta485.views.user import show_user
 from insta485.views.user import show_following
 from insta485.views.user import show_followers
 # from insta485.views.user import edit_follow
-# from insta485.views.post import show_post
+from insta485.views.post import show_post
 # from insta485.views.post import edit_post
 # from insta485.views.post import edit_like
 # from insta485.views.post import edit_comment

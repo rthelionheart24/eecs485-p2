@@ -13,15 +13,15 @@ from insta485.views.utility import get_following_list, get_profile_pic
 @insta485.app.route('/')
 def show_index():
     """Display / route."""
-    connection = insta485.model.get_db()
-
-    logname = 'awdeorio'
     if 'username' in flask.session:
         logname = flask.session['logname']
+    else:
+       flask.redirect(flask.url_for('/accounts/login/'))
 
     following_list = get_following_list(logname)
     following_list.append(logname)
 
+    connection = insta485.model.get_db()
     cur = connection.execute(
         "SELECT * FROM posts "
         "WHERE owner IN {} ORDER BY created DESC".format(tuple(following_list))
