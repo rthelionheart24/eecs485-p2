@@ -14,6 +14,7 @@ import insta485
 
 @insta485.app.route('/uploads/<filename>')
 def download_file(filename):
+    """Download file."""
     if 'username' not in flask.session:
         flask.abort(403)
     return flask.send_from_directory(
@@ -22,6 +23,7 @@ def download_file(filename):
 
 
 def get_following_list(username):
+    """Get following list."""
     connection = insta485.model.get_db()
     cur = connection.execute(
         "SELECT * FROM following "
@@ -33,6 +35,7 @@ def get_following_list(username):
 
 
 def get_followers_list(username):
+    """Get followers list."""
     connection = insta485.model.get_db()
     cur = connection.execute(
         "SELECT * FROM following "
@@ -44,6 +47,7 @@ def get_followers_list(username):
 
 
 def get_profile_pic(username):
+    """Get profile picture for username."""
     connection = insta485.model.get_db()
     cur = connection.execute(
         "SELECT filename FROM users "
@@ -54,6 +58,7 @@ def get_profile_pic(username):
 
 
 def user_exists_in_database(username):
+    """Check whether user exists in the database."""
     connection = insta485.model.get_db()
     cur = connection.execute(
         "SELECT * FROM users "
@@ -64,6 +69,7 @@ def user_exists_in_database(username):
 
 
 def follows(username1, username2):
+    """Check whether user1 follows user2."""
     connection = insta485.model.get_db()
     cur = connection.execute(
         "SELECT * FROM following "
@@ -74,6 +80,7 @@ def follows(username1, username2):
 
 
 def hash_password(password, salt=uuid.uuid4().hex):
+    """Hash the password with a salt."""
     algorithm = 'sha512'
     hash_obj = hashlib.new(algorithm)
     password_salted = salt + password
@@ -84,6 +91,7 @@ def hash_password(password, salt=uuid.uuid4().hex):
 
 
 def save_file(file):
+    """Save the file in system."""
     filename = file.filename
     stem = uuid.uuid4().hex
     suffix = pathlib.Path(filename).suffix

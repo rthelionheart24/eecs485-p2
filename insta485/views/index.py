@@ -29,9 +29,9 @@ def show_index():
         )
     else:
         cur = connection.execute(
-            "SELECT * FROM posts "
-            "WHERE owner IN {} ORDER BY created DESC".format(
-                tuple(following_list))
+            f"SELECT * FROM posts "
+            f"WHERE owner IN {tuple(following_list)} "
+            f"ORDER BY created DESC"
         )
 
     posts = cur.fetchall()

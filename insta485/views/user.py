@@ -6,18 +6,19 @@ URLs include:
 """
 import flask
 import insta485
-from insta485.views.utility import *
+from insta485.views.utility import user_exists_in_database, follows, \
+    get_profile_pic, get_following_list, get_followers_list
 
 
 @insta485.app.route('/users/<user_url_slug>/')
 def show_user(user_url_slug):
     """Display / route."""
-    if not user_exists_in_database(user_url_slug):
-        flask.abort(404)
-
     if 'username' not in flask.session:
         return flask.redirect(flask.url_for('login'))
     logname = flask.session['username']
+
+    if not user_exists_in_database(user_url_slug):
+        flask.abort(404)
 
     connection = insta485.model.get_db()
     cur = connection.execute(

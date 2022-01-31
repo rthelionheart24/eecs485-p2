@@ -12,15 +12,16 @@ import os
 import arrow
 import flask
 import insta485
-from insta485.views.utility import *
+from insta485.views.utility import get_profile_pic, save_file
 
 
 @insta485.app.route('/posts/<postid_url_slug>/')
 def show_post(postid_url_slug):
     """Display / route."""
-    if 'username' not in flask.session:
+    if 'username' in flask.session:
+        logname = flask.session['username']
+    else:
         return flask.redirect(flask.url_for('login'))
-    logname = flask.session['username']
 
     connection = insta485.model.get_db()
     cur = connection.execute(
@@ -28,27 +29,27 @@ def show_post(postid_url_slug):
         "WHERE postid == ?",
         (postid_url_slug, )
     )
-    post = cur.fetchall()[0]
+    pst = cur.fetchall()[0]
 
     cur = connection.execute(
         "SELECT * FROM comments "
         "WHERE postid == ?",
-        (post['postid'],)
+        (pst['postid'],)
     )
-    post['comments'] = cur.fetchall()
-    post['owner_img_url'] = get_profile_pic(post['owner'])
+    pst['comments'] = cur.fetchall()
+    pst['owner_img_url'] = get_profile_pic(pst['owner'])
     cur = connection.execute(
         "SELECT owner FROM likes "
         "WHERE postid == ?",
-        (post['postid'],)
+        (pst['postid'],)
     )
     liked_users = cur.fetchall()
-    post['likes'] = len(liked_users)
-    post['liked'] = logname in [d['owner'] for d in liked_users]
-    post['created'] = arrow.get(post['created']).humanize()
+    pst['likes'] = len(liked_users)
+    pst['liked'] = logname in [d['owner'] for d in liked_users]
+    pst['created'] = arrow.get(pst['created']).humanize()
     current_url = flask.request.path if flask.request.path \
         else flask.url_for('show_index')
-    context = {"logname": logname, "post": post,
+    context = {"logname": logname, "post": pst,
                "current_url": current_url,
                "logged_in_user_url": flask.url_for('show_user',
                                                    user_url_slug=logname)}
@@ -96,7 +97,7 @@ def edit_post():
 
     if flask.request.args.get('target'):
         return flask.redirect(flask.request.args.get('target'))
-    return flask.redirect(flask.url_for('show_user', user_url_slu=logname))
+    return flask.redirect(flask.url_for('show_user', user_url_slug=logname))
 
 
 @insta485.app.route('/likes/', methods=['POST'])

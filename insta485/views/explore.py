@@ -14,8 +14,8 @@ def show_explore():
     """Display / route."""
     if 'username' not in flask.session:
         return flask.redirect(flask.url_for('login'))
-    logname = flask.session['username']
     connection = insta485.model.get_db()
+    logname = flask.session['username']
     cur = connection.execute(
         "SELECT username FROM users"
     )
