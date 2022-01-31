@@ -18,7 +18,7 @@ def show_user(user_url_slug):
     if 'username' in flask.session:
         logname = flask.session['logname']
     else:
-        flask.redirect(flask.url_for('/accounts/login'))
+        return flask.redirect(flask.url_for('login'))
 
     connection = insta485.model.get_db()
     cur = connection.execute(
@@ -54,7 +54,7 @@ def show_followers(user_url_slug):
     if 'username' in flask.session:
         logname = flask.session['logname']
     else:
-        flask.redirect(flask.url_for('/accounts/login'))
+        return flask.redirect(flask.url_for('login'))
 
     followers_list = get_followers_list(user_url_slug)
     followers = []
@@ -76,7 +76,7 @@ def show_following(user_url_slug):
     if 'username' in flask.session:
         logname = flask.session['logname']
     else:
-        flask.redirect(flask.url_for('/accounts/login'))
+        return flask.redirect(flask.url_for('login'))
 
     following_list = get_following_list(user_url_slug)
     following = []

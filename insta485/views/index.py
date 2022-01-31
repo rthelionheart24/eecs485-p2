@@ -16,7 +16,7 @@ def show_index():
     if 'username' in flask.session:
         logname = flask.session['logname']
     else:
-       flask.redirect(flask.url_for('/accounts/login/'))
+        return flask.redirect(flask.url_for('login'))
 
     following_list = get_following_list(logname)
     following_list.append(logname)
@@ -32,14 +32,14 @@ def show_index():
         cur = connection.execute(
             "SELECT * FROM comments "
             "WHERE postid == ?",
-            (post['postid'], )
+            (post['postid'],)
         )
         post['comments'] = cur.fetchall()
         post['owner_img_url'] = get_profile_pic(post['owner'])
         cur = connection.execute(
             "SELECT owner FROM likes "
             "WHERE postid == ?",
-            (post['postid'], )
+            (post['postid'],)
         )
         liked_users = cur.fetchall()
         post['likes'] = len(liked_users)

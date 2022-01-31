@@ -19,7 +19,7 @@ def show_post(postid_url_slug):
     if 'username' in flask.session:
         logname = flask.session['logname']
     else:
-        flask.redirect(flask.url_for('/accounts/login/'))
+        return flask.redirect(flask.url_for('login'))
 
     connection = insta485.model.get_db()
     cur = connection.execute(

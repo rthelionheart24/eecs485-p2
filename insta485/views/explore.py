@@ -15,7 +15,7 @@ def show_explore():
     if 'username' in flask.session:
         logname = flask.session['logname']
     else:
-        flask.redirect(flask.url_for('/accounts/login'))
+        return flask.redirect(flask.url_for('login'))
 
     connection = insta485.model.get_db()
     cur = connection.execute(
@@ -30,4 +30,3 @@ def show_explore():
                                   "user_img_url": get_profile_pic(user)})
     context = {"logname": logname, "not_following": not_following}
     return flask.render_template("explore.html", **context)
-
