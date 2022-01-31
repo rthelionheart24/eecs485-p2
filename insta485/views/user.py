@@ -48,12 +48,12 @@ def show_user(user_url_slug):
 @insta485.app.route('/users/<user_url_slug>/followers/')
 def show_followers(user_url_slug):
     """Display / route."""
-    if not user_exists_in_database(user_url_slug):
-        flask.abort(404)
-
     if 'username' not in flask.session:
         return flask.redirect(flask.url_for('login'))
     logname = flask.session['username']
+
+    if not user_exists_in_database(user_url_slug):
+        flask.abort(404)
 
     followers_list = get_followers_list(user_url_slug)
     followers = []
@@ -70,12 +70,12 @@ def show_followers(user_url_slug):
 @insta485.app.route('/users/<user_url_slug>/following/')
 def show_following(user_url_slug):
     """Display / route."""
-    if not user_exists_in_database(user_url_slug):
-        flask.abort(404)
-
     if 'username' not in flask.session:
         return flask.redirect(flask.url_for('login'))
     logname = flask.session['username']
+
+    if not user_exists_in_database(user_url_slug):
+        flask.abort(404)
 
     following_list = get_following_list(user_url_slug)
     following = []

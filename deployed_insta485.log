@@ -1,0 +1,20 @@
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 18.118.211.13:80...
+* Connected to 18.118.211.13 (18.118.211.13) port 80 (#0)
+> GET /accounts/login/ HTTP/1.1
+> Host: 18.118.211.13
+> User-Agent: curl/7.77.0
+> Accept: */*
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< Server: nginx/1.18.0 (Ubuntu)
+< Date: Mon, 31 Jan 2022 09:36:20 GMT
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 1020
+< Connection: keep-alive
+< 
+{ [1020 bytes data]
+100  1020  100  1020    0     0  14596      0 --:--:-- --:--:-- --:--:-- 16721
+* Connection #0 to host 18.118.211.13 left intact
