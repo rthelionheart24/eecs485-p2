@@ -41,4 +41,5 @@ hr {
     margin-bottom: 15px;
     display: flex;
     flex-direction: row;
+    height: 60px;
 }

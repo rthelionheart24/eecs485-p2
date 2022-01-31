@@ -23,9 +23,9 @@
                 <div class="row-container">
                     <p>following</p>
                     <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
-                    <form style="margin-top: 15px; margin-left: 5px" action="<FIXME_FOLLOWING_URL_HERE>?target=<FIXME_CURRENT_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
+                    <form style="margin-top: 15px; margin-left: 5px" action="/following/?target={{ current_url }}" method="post" enctype="multipart/form-data">
                       <input type="submit" name="unfollow" value="unfollow"/>
-                      <input type="hidden" name="username" value="<FIXME_USERNAME_HERE>"/>
+                      <input type="hidden" name="username" value="{{ username }}" />
                       <input type="hidden" name="operation" value="unfollow"/>
                     </form>
                 </div>
@@ -33,9 +33,9 @@
                 <div class="row-container">
                     <p>not following</p>
                     <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
-                    <form style="margin-top: 15px; margin-left: 5px" action="<FIXME_FOLLOWING_URL_HERE>?target=<FIXME_CURRENT_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
+                    <form style="margin-top: 15px; margin-left: 5px" action="/following/?target={{ current_url }}" method="post" enctype="multipart/form-data">
                       <input type="submit" name="follow" value="follow"/>
-                      <input type="hidden" name="username" value="<FIXME_USERNAME_HERE>"/>
+                      <input type="hidden" name="username" value="{{ username }}" />
                       <input type="hidden" name="operation" value="follow"/>
                     </form>
                 </div>
@@ -70,7 +70,7 @@
         {%  if username == logname %}
             <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
             <div style="border: solid 1px darkgrey; height: 60px; border-radius: 5px; width: 97%; margin-bottom: 20px">
-            <form style="margin-top: 20px; margin-left: 50px " action="<FIXME_POSTS_URL_HERE>?target=<FIXME_CURRENT_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
+            <form style="margin-top: 20px; margin-left: 50px " action="/posts/?target={{ current_url }}" method="post" enctype="multipart/form-data">
               <input type="file" name="file" accept="image/*" required/>
               <input type="submit" name="create_post" value="upload new post"/>
               <input type="hidden" name="operation" value="create"/>

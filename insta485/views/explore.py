@@ -26,5 +26,6 @@ def show_explore():
         if user not in following_list and user != logname:
             not_following.append({"username": user,
                                   "user_img_url": get_profile_pic(user)})
-    context = {"logname": logname, "not_following": not_following}
+    context = {"logname": logname, "not_following": not_following,
+               "current_url": flask.request.path}
     return flask.render_template("explore.html", **context)

@@ -50,8 +50,9 @@ def show_index():
         )
         liked_users = cur.fetchall()
         post['likes'] = len(liked_users)
-        post['liked'] = logname in liked_users
+        post['liked'] = logname in [d['owner'] for d in liked_users]
         post['created'] = arrow.get(post['created']).humanize()
 
-    context = {"logname": logname, "posts": posts}
+    context = {"logname": logname, "posts": posts,
+               "current_url": flask.request.path}
     return flask.render_template("index.html", **context)

@@ -24,13 +24,13 @@
                      style="width: 25px; height: 30px; margin-top: 14px; margin-left: 15px; margin-right: 2px">
                 <a href="/users/{{ follower.username }}/" class="child" style="width: 37.5%;">{{ follower.username }}</a>
                 {% if follower.username != logname %}
-                    {% if follower.logname_follows_username == true %}
+                    {% if follower.logname_follows_username %}
                         <div class="row-container" style="margin-left: 140px">
                             <p class="child" style="text-align: end; color: grey">following</p>
                             <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
-                            <form class="child" action="<FIXME_FOLLOWING_URL_HERE>?target=<FIXME_CURRENT_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
+                            <form class="child" action="/following/?target={{ current_url }}" method="post" enctype="multipart/form-data">
                               <input style="width: 65px" type="submit" name="unfollow" value="unfollow"/>
-                              <input type="hidden" name="username" value="<FIXME_USERNAME_HERE>"/>
+                              <input type="hidden" name="username" value="{{ follower.username }}" />
                               <input type="hidden" name="operation" value="unfollow"/>
                             </form>
                         </div>
@@ -38,9 +38,9 @@
                         <div class="row-container" style="justify-content: end">
                             <p style="text-align: end; color: grey; font-weight: bold; margin-top: 20px; margin-right: 4px; margin-left: 120px">not following</p>
                             <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
-                            <form style="margin-top: 20px" action="<FIXME_FOLLOWING_URL_HERE>?target=<FIXME_CURRENT_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
+                            <form style="margin-top: 20px" action="/following/?target={{ current_url }}" method="post" enctype="multipart/form-data">
                               <input style="width: 65px" type="submit" name="follow" value="follow"/>
-                              <input type="hidden" name="username" value="<FIXME_USERNAME_HERE>"/>
+                              <input type="hidden" name="username" value="{{ follower.username }}" />
                               <input type="hidden" name="operation" value="follow"/>
                             </form>
                         </div>

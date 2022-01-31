@@ -37,47 +37,46 @@
                 {% for comment in post.comments %}
                     <div class="comment">
                         <a href="/users/{{ comment.owner }}/">{{ comment.owner }}</a> {{ comment.text }}
-
                     {% if logname == comment.owner %}
                     <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
-                    <form action="<FIXME_COMMENTS_URL_HERE>?target=<FIXME_CURRENT_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
-                      <input type="hidden" name="operation" value="delete"/>
-                      <input type="hidden" name="commentid" value="<FIXME_COMMENT_ID_HERE>"/>
-                      <input type="submit" name="uncomment" value="delete"/>
+                    <form action="/comments/?target={{ current_url }}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="operation" value="delete"/>
+                        <input type="hidden" name="commentid" value="{{ comment.commentid }}" />
+                        <input type="submit" name="uncomment" value="delete"/>
                     </form>
                     {% endif %}
                     </div>
                 {% endfor %}
-                {% if post.liked %}
+                {% if post.liked == true %}
                 <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
-                <form class="form" action="<FIXME_LIKES_URL_HERE>?target=<FIXME_CURRENT_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
-                  <input type="hidden" name="operation" value="like"/>
-                  <input type="hidden" name="postid" value="<FIXME_POST_ID_HERE>"/>
-                  <input type="submit" name="like" value="like"/>
+                <form class="form" action="{{ url_for('edit_likes') }}?target={{ current_url }}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="operation" value="unlike"/>
+                    <input type="hidden" name="postid" value="{{ post.postid }}" />
+                    <input type="submit" name="unlike" value="unlike"/>
                 </form>
                 {% else %}
                 <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
-                <form class="form" action="<FIXME_LIKES_URL_HERE>?target=<FIXME_CURRENT_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
-                  <input type="hidden" name="operation" value="unlike"/>
-                  <input type="hidden" name="postid" value="<FIXME_POST_ID_HERE>"/>
-                  <input type="submit" name="unlike" value="unlike"/>
+                    <form class="form" action="/likes/?target={{ current_url }}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="operation" value="like"/>
+                    <input type="hidden" name="postid" value="{{ post.postid }}" />
+                    <input type="submit" name="like" value="like"/>
                 </form>
                 {% endif %}
                 <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
-                <form class="form" action="<FIXME_COMMENTS_URL_HERE>?target=<FIXME_CURRENT_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
-                  <input type="hidden" name="operation" value="create"/>
-                  <input type="hidden" name="postid" value="<FIXME_POST_ID_HERE>"/>
-                  <input type="text" name="text" required/>
-                  <input type="submit" name="comment" value="comment"/>
+                <form class="form" action="/comments/?target={{ current_url }}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="operation" value="create"/>
+                    <input type="hidden" name="postid" value="{{ post.postid }}" />
+                    <input type="text" name="text" required/>
+                    <input type="submit" name="comment" value="comment"/>
                 </form>
                 {% if logname == post.owner %}
                 <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
-                <form class="form" action="<FIXME_POSTS_URL_HERE>?target=<FIXME_LOGGED_IN_USER_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
-                  <input type="hidden" name="operation" value="delete"/>
-                  <input type="hidden" name="postid" value="<FIXME_POST_ID_HERE>"/>
-                  <input type="submit" name="delete" value="delete this post"/>
+                <form class="form" action="/posts/?target={{ logged_in_user_url }}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="operation" value="delete"/>
+                    <input type="hidden" name="postid" value="{{ post.postid }}" />
+                    <input type="submit" name="delete" value="delete this post"/>
                 </form>
-                {%  endif %}
+                {% endif %}
             </div>
         </div>
     </div>

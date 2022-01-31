@@ -3,11 +3,11 @@ from insta485.views.index import show_index
 from insta485.views.user import show_user
 from insta485.views.user import show_following
 from insta485.views.user import show_followers
-# from insta485.views.user import edit_follow
+from insta485.views.user import edit_follow
 from insta485.views.post import show_post
-# from insta485.views.post import edit_post
-# from insta485.views.post import edit_like
-# from insta485.views.post import edit_comment
+from insta485.views.post import edit_post
+from insta485.views.post import edit_likes
+from insta485.views.post import edit_comment
 from insta485.views.auth import login
 from insta485.views.auth import logout
 from insta485.views.auth import create

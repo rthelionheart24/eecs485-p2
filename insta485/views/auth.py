@@ -113,7 +113,6 @@ def edit_account():
         if result[0]['password'] != password:
             flask.abort(403)
         flask.session['username'] = username
-        return flask.redirect(flask.request.args.get('target'))
 
     elif operation == 'create':
         username = flask.request.values.get('username')
@@ -136,13 +135,33 @@ def edit_account():
         )
 
         flask.session['username'] = username
-        return flask.redirect(flask.request.args.get('target'))
+
     elif operation == 'delete':
         if 'username' not in flask.session:
             flask.abort(403)
         logname = flask.session['username']
 
         connection = insta485.model.get_db()
+        cur = connection.execute(
+            "SELECT filename FROM posts "
+            "WHERE owner == ?",
+            (logname, )
+        )
+        content = cur.fetchall()
+        filenames = [d['filename'] for d in content]
+        for filename in filenames:
+            path = insta485.app.config["UPLOAD_FOLDER"] / filename
+            os.remove(path)
+
+        cur = connection.execute(
+            "SELECT filename FROM users "
+            "WHERE username == ?",
+            (logname, )
+        )
+        filename = cur.fetchone['filename']
+        path = insta485.app.config["UPLOAD_FOLDER"] / filename
+        os.remove(path)
+
         connection.execute(
             "DELETE FROM users "
             "WHERE username == ?",
@@ -150,7 +169,7 @@ def edit_account():
         )
 
         flask.session.clear()
-        return flask.redirect(flask.request.args.get('target'))
+
     elif operation == 'edit_account':
         if 'username' not in flask.session:
             flask.abort(403)
@@ -182,8 +201,6 @@ def edit_account():
                 "WHERE username == ?",
                 (fullname, email, logname, )
             )
-        return flask.redirect(flask.request.args.get('target'))
-
 
     elif operation == 'update_password':
         if 'username' not in flask.session:
@@ -216,4 +233,8 @@ def edit_account():
             "WHERE username == ?",
             (new_password, logname, )
         )
+
+    logname = flask.session['username']
+    if flask.request.args.get('target'):
         return flask.redirect(flask.request.args.get('target'))
+    return flask.redirect(flask.url_for('show_index'))

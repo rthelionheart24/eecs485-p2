@@ -6,7 +6,7 @@ URLs include:
 """
 import flask
 import insta485
-from insta485.views.utility import get_following_list, get_followers_list, get_profile_pic, user_exists_in_database, follows
+from insta485.views.utility import *
 
 
 @insta485.app.route('/users/<user_url_slug>/')
@@ -37,7 +37,7 @@ def show_user(user_url_slug):
     # Add database info to context
     context = {"logname": logname, "username": user_url_slug,
                "logname_follows_username": follows(logname, user_url_slug),
-               "fullname": fullname,
+               "fullname": fullname, "current_url": flask.request.path,
                "following": len(get_following_list(user_url_slug)),
                "followers": len(get_followers_list(user_url_slug)),
                "total_posts": len(posts), "posts": posts}
@@ -61,7 +61,8 @@ def show_followers(user_url_slug):
                'logname_follows_username': follows(logname, follower)}
         followers.append(dic)
 
-    context = {"logname": logname, "followers": followers}
+    context = {"logname": logname, "followers": followers,
+               "current_url": flask.request.path}
     return flask.render_template("followers.html", **context)
 
 
@@ -82,10 +83,45 @@ def show_following(user_url_slug):
                'logname_follows_username': follows(logname, follow)}
         following.append(dic)
 
-    context = {"logname": logname, "following": following}
+    context = {"logname": logname, "following": following,
+               "current_url": flask.request.path}
     return flask.render_template("following.html", **context)
 
 
-@insta485.app.route('/following/?target=URL')
-def edit_follow(url):
+@insta485.app.route('/following/', methods=['POST'])
+def edit_follow():
     """Display / route."""
+    if 'username' not in flask.session:
+        return flask.redirect(flask.url_for('login'))
+    logname = flask.session['username']
+
+    operation = flask.request.values.get('operation')
+    username = flask.request.values.get('username')
+    connection = insta485.model.get_db()
+    cur = connection.execute(
+        "SELECT * FROM following "
+        "WHERE username1 == ? AND username2 == ?",
+        (logname, username, )
+    )
+    content = cur.fetchall()
+    if len(content) == 0 and operation == 'unfollow':
+        flask.abort(409)
+    if len(content) == 1 and operation == 'follow':
+        flask.abort(409)
+
+    if operation == 'follow':
+        connection.execute(
+            "INSERT INTO following(username1, username2)"
+            "VALUES (?, ?)",
+            (logname, username, )
+        )
+    elif operation == 'unfollow':
+        connection.execute(
+            "DELETE FROM following "
+            "WHERE username1 == ? AND username2 == ?",
+            (logname, username, )
+        )
+
+    if flask.request.args.get('target'):
+        return flask.redirect(flask.request.args.get('target'))
+    return flask.redirect(flask.url_for('show_index'))

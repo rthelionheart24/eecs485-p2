@@ -7,10 +7,12 @@ URLs include:
 /likes/?target=URL
 /comments/?target=URL
 """
+import os
+
 import arrow
 import flask
 import insta485
-from insta485.views.utility import get_profile_pic
+from insta485.views.utility import *
 
 
 @insta485.app.route('/posts/<postid_url_slug>/')
@@ -42,25 +44,130 @@ def show_post(postid_url_slug):
     )
     liked_users = cur.fetchall()
     post['likes'] = len(liked_users)
-    post['liked'] = logname in liked_users
-    timestamp = arrow.get(post['created'])
-    post['created'] = arrow.now().humanize(timestamp)
-
-    context = {"logname": logname, "post": post}
+    post['liked'] = logname in [d['owner'] for d in liked_users]
+    post['created'] = arrow.get(post['created']).humanize()
+    current_url = flask.request.path if flask.request.path \
+        else flask.url_for('show_index')
+    context = {"logname": logname, "post": post,
+               "current_url": current_url,
+               "logged_in_user_url": flask.url_for('show_user',
+                                                   user_url_slug=logname)}
     return flask.render_template("post.html", **context)
 
 
-@insta485.app.route('/posts/?target=URL')
-def edit_post(url):
+@insta485.app.route('/posts/', methods=['POST'])
+def edit_post():
     """Display / route."""
+    if 'username' not in flask.session:
+        return flask.redirect(flask.url_for('login'))
+    logname = flask.session['username']
+    operation = flask.request.values.get('operation')
+    connection = insta485.model.get_db()
+
+    if operation == 'create':
+        file = flask.request.files.get('file')
+        if not file:
+            flask.abort(400)
+        filename = save_file(file)
+        connection.execute(
+            "INSERT INTO posts(filename, owner)"
+            "VALUES (?, ?)",
+            (filename, logname, )
+        )
+
+    elif operation == 'delete':
+        postid = flask.request.values.get('postid')
+        cur = connection.execute(
+            "SELECT owner, filename from posts "
+            "WHERE postid == ?",
+            (postid, )
+        )
+        content = cur.fetchone()
+        if content['owner'] != logname:
+            flask.abort(403)
+        old_filename = content['filename']
+        path = insta485.app.config["UPLOAD_FOLDER"] / old_filename
+        os.remove(path)
+        connection.execute(
+            "DELETE FROM posts "
+            "WHERE postid == ?",
+            (postid, )
+        )
+
+    if flask.request.args.get('target'):
+        return flask.redirect(flask.request.args.get('target'))
+    return flask.redirect(flask.url_for('show_user', user_url_slu=logname))
 
 
-@insta485.app.route('/likes/?target=URL')
-def edit_like(url):
+@insta485.app.route('/likes/', methods=['POST'])
+def edit_likes():
     """Display / route."""
+    if 'username' not in flask.session:
+        return flask.redirect(flask.url_for('login'))
+    logname = flask.session['username']
+    operation = flask.request.values.get('operation')
+    postid = flask.request.values.get('postid')
+    connection = insta485.model.get_db()
+    cur = connection.execute(
+        "SELECT * FROM likes "
+        "WHERE owner == ? AND postid == ?",
+        (logname, postid, )
+    )
+    content = cur.fetchall()
+    if len(content) == 0 and operation == 'unlike':
+        flask.abort(409)
+    if len(content) == 1 and operation == 'like':
+        flask.abort(409)
+
+    if operation == 'like':
+        connection.execute(
+            "INSERT INTO likes(owner, postid)"
+            "VALUES (?, ?)",
+            (logname, postid, )
+        )
+    elif operation == 'unlike':
+        connection.execute(
+            "DELETE FROM likes "
+            "WHERE owner == ? AND postid == ?",
+            (logname, postid, )
+        )
+    if flask.request.args.get('target'):
+        return flask.redirect(flask.request.args.get('target'))
+    return flask.redirect(flask.url_for('show_index'))
 
 
-@insta485.app.route('/comments/?target=URL')
-def edit_comment(url):
+@insta485.app.route('/comments/', methods=['POST'])
+def edit_comment():
     """Display / route."""
-
+    if 'username' not in flask.session:
+        return flask.redirect(flask.url_for('login'))
+    logname = flask.session['username']
+    operation = flask.request.values.get('operation')
+    connection = insta485.model.get_db()
+    if operation == 'create':
+        postid = flask.request.values.get('postid')
+        text = flask.request.values.get('text')
+        if not text:
+            flask.abort(400)
+        connection.execute(
+            "INSERT INTO comments(owner, postid, text)"
+            "VALUES (?, ?, ?)",
+            (logname, postid, text, )
+        )
+    elif operation == 'delete':
+        commentid = flask.request.values.get('commentid')
+        cur = connection.execute(
+            "SELECT owner from comments "
+            "WHERE commentid == ?",
+            (commentid, )
+        )
+        if cur.fetchone()['owner'] != logname:
+            flask.abort(403)
+        connection.execute(
+            "DELETE FROM comments "
+            "WHERE commentid == ?",
+            (commentid, )
+        )
+    if flask.request.args.get('target'):
+        return flask.redirect(flask.request.args.get('target'))
+    return flask.redirect(flask.url_for('show_index'))
