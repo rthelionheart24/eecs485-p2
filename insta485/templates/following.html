@@ -25,7 +25,7 @@
                 <a href="/users/{{ follow.username }}/" class="child" style="width: 37.5%;">{{ follow.username }}</a>
                 {% if follow.username != logname %}
                     {% if follow.logname_follows_username %}
-                        <div class="row-container" style="margin-left: 150px">
+                        <div class="row-container" style="margin-left: 140px">
                             <p class="child" style="text-align: end; color: grey">following</p>
                             <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
                             <form class="child" action="<FIXME_FOLLOWING_URL_HERE>?target=<FIXME_CURRENT_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
@@ -36,7 +36,7 @@
                         </div>
                     {% else %}
                         <div class="row-container" style="justify-content: end">
-                            <p style="text-align: end; color: grey; font-weight: bold; margin-top: 20px; margin-right: 4px; margin-left: 135px">not following</p>
+                            <p style="text-align: end; color: grey; font-weight: bold; margin-top: 20px; margin-right: 4px; margin-left: 120px">not following</p>
                             <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
                             <form style="margin-top: 20px" action="<FIXME_FOLLOWING_URL_HERE>?target=<FIXME_CURRENT_PAGE_URL_HERE>" method="post" enctype="multipart/form-data">
                               <input type="submit" name="follow" value="follow"/>

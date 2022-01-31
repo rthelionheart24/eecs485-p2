@@ -15,10 +15,9 @@ def show_user(user_url_slug):
     if not user_exists_in_database(user_url_slug):
         flask.abort(404)
 
-    if 'username' in flask.session:
-        logname = flask.session['logname']
-    else:
+    if 'username' not in flask.session:
         return flask.redirect(flask.url_for('login'))
+    logname = flask.session['username']
 
     connection = insta485.model.get_db()
     cur = connection.execute(
@@ -45,16 +44,15 @@ def show_user(user_url_slug):
     return flask.render_template("user.html", **context)
 
 
-@insta485.app.route('/users/<user_url_slug>/followers')
+@insta485.app.route('/users/<user_url_slug>/followers/')
 def show_followers(user_url_slug):
     """Display / route."""
     if not user_exists_in_database(user_url_slug):
         flask.abort(404)
 
-    if 'username' in flask.session:
-        logname = flask.session['logname']
-    else:
+    if 'username' not in flask.session:
         return flask.redirect(flask.url_for('login'))
+    logname = flask.session['username']
 
     followers_list = get_followers_list(user_url_slug)
     followers = []
@@ -67,16 +65,15 @@ def show_followers(user_url_slug):
     return flask.render_template("followers.html", **context)
 
 
-@insta485.app.route('/users/<user_url_slug>/following')
+@insta485.app.route('/users/<user_url_slug>/following/')
 def show_following(user_url_slug):
     """Display / route."""
     if not user_exists_in_database(user_url_slug):
         flask.abort(404)
 
-    if 'username' in flask.session:
-        logname = flask.session['logname']
-    else:
+    if 'username' not in flask.session:
         return flask.redirect(flask.url_for('login'))
+    logname = flask.session['username']
 
     following_list = get_following_list(user_url_slug)
     following = []

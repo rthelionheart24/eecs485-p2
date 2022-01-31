@@ -16,10 +16,9 @@ from insta485.views.utility import get_profile_pic
 @insta485.app.route('/posts/<postid_url_slug>/')
 def show_post(postid_url_slug):
     """Display / route."""
-    if 'username' in flask.session:
-        logname = flask.session['logname']
-    else:
+    if 'username' not in flask.session:
         return flask.redirect(flask.url_for('login'))
+    logname = flask.session['username']
 
     connection = insta485.model.get_db()
     cur = connection.execute(
@@ -49,7 +48,6 @@ def show_post(postid_url_slug):
 
     context = {"logname": logname, "post": post}
     return flask.render_template("post.html", **context)
-
 
 
 @insta485.app.route('/posts/?target=URL')

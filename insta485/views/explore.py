@@ -12,11 +12,9 @@ from insta485.views.utility import get_following_list, get_profile_pic
 @insta485.app.route('/explore/')
 def show_explore():
     """Display / route."""
-    if 'username' in flask.session:
-        logname = flask.session['logname']
-    else:
+    if 'username' not in flask.session:
         return flask.redirect(flask.url_for('login'))
-
+    logname = flask.session['username']
     connection = insta485.model.get_db()
     cur = connection.execute(
         "SELECT username FROM users"

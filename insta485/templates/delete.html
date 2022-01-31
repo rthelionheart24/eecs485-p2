@@ -19,7 +19,7 @@
     <div class="column-container" style="margin-left: 50px">
         <!-- DO NOT CHANGE THIS -->
         <p> {{ logname }}</p>
-        <form action="<FIXME_ACCOUNTS_URL_HERE>?target=<FIXME_ACCOUNTS_CREATE_HERE>" method="post" enctype="multipart/form-data">
+        <form action="/accounts/?target={{ url_for('create') }}" method="post" enctype="multipart/form-data">
           <input type="submit" name="delete" value="confirm delete account"/>
           <input type="hidden" name="operation" value="delete"/>
         </form>
